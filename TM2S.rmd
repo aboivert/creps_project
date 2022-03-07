@@ -1,0 +1,87 @@
+---
+title: "TM2S"
+output: pdf_document
+---
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+#install.packages("readxl")
+library("readxl")
+data<-read_excel("RecapTM2S2021.xlsx")
+
+summary(data)
+head(data)
+vect<-c(4,5,6,8,9,10,14,15,17,18) #colonnes des exercices sans les globaux
+asy<-c(7,11,16) #colonnes où sont indiquées les asymétries
+data$Mobinfasy=factor(data$Mobinfasy, labels=c("0","1"))
+data$Mobsupasy=factor(data$Mobsupasy, labels=c("0","1"))
+data$Stabpelvasy=factor(data$Stabpelvasy, labels=c("0","1"))
+
+boxplot(data[vect],main = "boxplot")
+
+Mobinfasy<-table(data$Mobinfasy); Mobinfasy
+Mobsupasy<-table(data$Mobsupasy);Mobsupasy
+Stabpelvasy<-table(data$Stabpelvasy); Stabpelvasy
+
+Mobasy=table(Mobsupasy,Mobinfasy);Mobasy
+Stabmobinfasy=table(Mobinfasy,Stabpelvasy);Stabmobinfasy
+Stabmobsupasy=table(Mobsupasy,Stabpelvasy);Stabmobsupasy
+M=cor(Stabmobinfasy,Stabmobsupasy)
+library(corrplot)
+corrplot(M,method='ellipse')
+```
+
+```
+````
+
+```{r}
+data<-read_excel("RécapTM2S20202021.xlsx")
+head(data)
+data$`Mob inf asy`=factor(data$`Mob inf asy`,labels=c("0","1"))
+data$`Mob sup asy`=factor(data$`Mob sup asy`,labels=c("0","1"))
+data$`Stab pelv asy`=factor(data$`Stab pelv asy`,labels=c("0","1"))
+data$`Mob inf asy`=as.numeric(data$`Mob inf asy`)
+data$`Mob sup asy`=as.numeric(data$`Mob sup asy`)
+data$`Stab pelv asy`=as.numeric(data$`Stab pelv asy`)
+head(data)
+exos_asy=data[,c(7,11,16)]
+M=cor(data[exos_asy])
+corrplot(M,method='ellipse')
+
+#test indép???
+```
+
+```{r}
+data<-read_excel("RécapTM2S20202021.xlsx")
+head(data)
+exos_asy=data[,c(4,5,6,8,9,10,12,14,15,17,18)]
+M<-cor(exos_asy)
+corrplot(M,method='ellipse')
+#chanegr les oui/non en O/1 pour voir !!!
+```
+
+```{r}
+data<-read_excel("TM2S20222.xlsx")
+head(data)
+exos_asy=data[,c(4,5,6,8,9,10,12,14,15,17,18)]
+M<-cor(exos_asy)
+M
+corrplot(M,method='circle')
+#chanegr les oui/non en O/1 pour voir !!!
+```
+```{r}
+SCORE=data$Totaltest
+POLES=data$Sport
+MOBTOT=data$Totalmob
+STABTOT=data$Totalstab
+AVIRON2=data[data$Sport=="Aviron",]
+boxplot(data$Mobinfasy ~ POLES, cex.axis = 0.5, main = "Score against centres Boxplots", xlab = "Centres", ylab = "Score", ylim = c(0,1))
+
+pie(table(AVIRON2$Mobinfdroite))
+#chaque sport score total mob stab
+```
