@@ -1,0 +1,29 @@
+---
+title: "type_of_wound_VS_local_score"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library("readxl")
+library("tidyr")
+data = read_excel("tm2s_2021.xlsx")
+```
+
+Creation of all datasets
+
+```{r}
+MS = data[data$Categorie=="MS",]; MS = MS[rowSums(is.na(MS)) != ncol(MS), ] 
+MI = data[data$Categorie=="MI",]; MI = MI[rowSums(is.na(MI)) != ncol(MI), ] 
+RT = data[data$Categorie=="R",]; RT = RT[rowSums(is.na(RT)) != ncol(RT), ] 
+```
+
+TO DO LIST
+- analyse exploratoire des données
+- comparaison avec les gens non blessés à ces endroits
+- reprendre le petit excel, coder pour chacune des blessures la blessure, et vérifier la corrélation entre le score TM2S de l'endroit et la blessure (pour chacune des blessures)
+- voir pour un modèle linéaire simple ? blessure localisée en fonction de différents scores ? à voir...
+- ACP et clusteriser les blessures ? (sur données non ACP et ACP)
