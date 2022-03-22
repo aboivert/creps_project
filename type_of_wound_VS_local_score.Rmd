@@ -10,7 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library("readxl")
 library("tidyr")
+library("corrplot")
 data = read_excel("tm2s_2021.xlsx")
+small_data = read_excel("small_tm2S_2021.xlsx")
 ```
 
 Creation of all datasets
@@ -24,6 +26,23 @@ RT = data[data$Categorie=="R",]; RT = RT[rowSums(is.na(RT)) != ncol(RT), ]
 TO DO LIST
 - analyse exploratoire des données
 - comparaison avec les gens non blessés à ces endroits
-- reprendre le petit excel, coder pour chacune des blessures la blessure, et vérifier la corrélation entre le score TM2S de l'endroit et la blessure (pour chacune des blessures)
 - voir pour un modèle linéaire simple ? blessure localisée en fonction de différents scores ? à voir...
-- ACP et clusteriser les blessures ? (sur données non ACP et ACP)
+
+```{r}
+compteur_j = 0
+compteur_i = 0
+correlations = matrix(ncol = 14, nrow = 3)
+rownames(correlations) = c("MS", "MI","R")
+colnames(correlations) = c("MobInfD","MobInfG","MobInfBil","MobSupD","MobSupG","MobSupBil","Global","TotMob","StabPelvD","StabPelvG","StabScap","StabCore","TotStab","TotTest")
+for (j in c(22,23,24)){
+  compteur_j = compteur_j + 1
+  for (i in c(4,5,6,8,9,10,12,13,14,15,17,18,19,20)){
+    compteur_i = compteur_i + 1
+    correlations[compteur_j,compteur_i] = cor(small_data[j],small_data[i])
+  }
+  compteur_i = 0
+}
+corrplot(correlations, method='ellipse')
+````
+
+
