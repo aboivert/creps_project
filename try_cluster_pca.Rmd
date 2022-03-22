@@ -1,0 +1,116 @@
+---
+title: "try_cluster_pca"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library("FactoMineR")
+library("factoextra")
+data = read_excel("tm2s_2021.xlsx")
+small_data = read_excel("small_tm2S_2021.xlsx")
+```
+
+```{r}
+#PCA on MI, MS, R
+acp = PCA(small_data[c(22,23,24)], scale.unit = TRUE)
+options(repr.plot.width = 12, repr.plot.height = 5)
+par(mfrow = c(1, 2))
+barplot(acp$eig[1:3, 1], main = "Inertia")
+barplot(acp$eig[1:3, 2], ylim = c(0, 100), main = "Percentage of inertia")
+acp$eig[1:3, 2]
+options(repr.plot.width = 15, repr.plot.height = 20)
+par(mfrow = c(2, 2))
+for (i in 1:3){
+    plot(acp$svd$V[, i], type = "o", main = paste("Comp. ", i),
+         ylim = c(-10, 10), col = "blue")
+}
+````
+```{r}
+#PCA on total scores of mobility, stability and on the whole test
+acp = PCA(small_data[c(13,19,20)], scale.unit = TRUE)
+options(repr.plot.width = 12, repr.plot.height = 5)
+par(mfrow = c(1, 2))
+barplot(acp$eig[1:3, 1], main = "Inertia")
+barplot(acp$eig[1:3, 2], ylim = c(0, 100), main = "Percentage of inertia")
+acp$eig[1:3, 2]
+options(repr.plot.width = 15, repr.plot.height = 20)
+par(mfrow = c(2, 2))
+for (i in 1:3){
+    plot(acp$svd$V[, i], type = "o", main = paste("Comp. ", i),
+         ylim = c(-10, 10), col = "blue")
+}
+````
+
+
+```{r}
+#PCA on total scores of mobility, stability and on the whole test
+acp = PCA(small_data[c(4,5,6,8,9,10,13,14,15,17,18,19,20)], scale.unit = TRUE)
+options(repr.plot.width = 12, repr.plot.height = 5)
+par(mfrow = c(1, 2))
+barplot(acp$eig[1:8, 1], main = "Inertia")
+barplot(acp$eig[1:8, 2], ylim = c(0, 100), main = "Percentage of inertia")
+acp$eig[1:8, 2]
+options(repr.plot.width = 15, repr.plot.height = 20)
+par(mfrow = c(3, 2))
+for (i in 1:5){
+    plot(acp$svd$V[, i], type = "o", main = paste("Comp. ", i),
+         ylim = c(-2, 12), col = "blue")
+}
+````
+# Voir si on peut afficher le nombre de blessures de chacun des individus sur le graphe des individus
+
+Pour continuer à travailler sur le cluster, essayer de trouver un moyen de clusteriser selon le score de cette année. Il pourra être intéressant ensuite de plot les mêmes clusters avec les scores post-test.
+
+Modèles simples à essayer : nombre de blessures total en fonction des scores, nombre de blessures localisées en fonction des scores...
+
+```{r}
+#Clustering on all scores (unscaled data)
+par(mfrow = c(3, 2))
+options(repr.plot.width = 10, repr.plot.height = 5)
+
+for (i in 2:7){
+    res.km <- kmeans(small_data[c(4,5,6,8,9,10,13,14,15,17,18,19,20)], i, iter.max = 10, nstart = 1)
+    plot(fviz_cluster(res.km, data = small_data[c(4,5,6,8,9,10,13,14,15,17,18,19,20)],
+                 palette = "FantasticFox", 
+                 geom = c("point","text"),
+                 ellipse.type = "convex", 
+                 ggtheme = theme_bw()
+                 ))
+}
+````
+
+```{r}
+#Clusters on total scores of mobility, stability and on the whole test (unscaled data)
+par(mfrow = c(3, 2))
+options(repr.plot.width = 10, repr.plot.height = 5)
+
+for (i in 2:7){
+    res.km <- kmeans(scale(small_data[c(13,19,20)]), i, iter.max = 10, nstart = 1)
+    plot(fviz_cluster(res.km, data = small_data[c(13,19,20)],
+                 palette = "FantasticFox", 
+                 geom = c("point","text"),
+                 ellipse.type = "convex", 
+                 ggtheme = theme_bw()
+                 ))
+}
+````
+
+```{r}
+# Clustering on MI, MS, R (unscaled data)
+par(mfrow = c(3, 2))
+options(repr.plot.width = 10, repr.plot.height = 5)
+
+for (i in 2:7){
+    res.km <- kmeans(scale(small_data[c(22,23,24)]), i, iter.max = 10, nstart = 1)
+    plot(fviz_cluster(res.km, data = small_data[c(22,23,24)],
+                 palette = "FantasticFox", 
+                 geom = c("point","text"),
+                 ellipse.type = "convex", 
+                 ggtheme = theme_bw()
+                 ))
+}
+````
