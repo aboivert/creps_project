@@ -1,0 +1,175 @@
+---
+title: "Independance_exercises"
+output: pdf_document
+---
+
+```{r}
+#install.packages("readxl")
+library("readxl")
+data<-read_excel("Drive/RecapTM2S20202021.xlsx")
+
+summary(data)
+head(data)
+vect<-c(4,5,6,8,9,10,14,15,17,18) #colonnes des exercices sans les globaux
+asy<-c(7,11,16) #colonnes où sont indiquées les asymétries
+data$Mobinfasy=factor(data$Mobinfasy, labels=c("0","1"))
+data$Mobsupasy=factor(data$Mobsupasy, labels=c("0","1"))
+data$Stabpelvasy=factor(data$Stabpelvasy, labels=c("0","1"))
+
+boxplot(data[vect],main = "boxplot")
+
+Mobinfasy<-table(data$Mobinfasy); Mobinfasy
+Mobsupasy<-table(data$Mobsupasy);Mobsupasy
+Stabpelvasy<-table(data$Stabpelvasy); Stabpelvasy
+
+Mobasy=table(Mobsupasy,Mobinfasy);Mobasy
+Stabmobinfasy=table(Mobinfasy,Stabpelvasy);Stabmobinfasy
+Stabmobsupasy=table(Mobsupasy,Stabpelvasy);Stabmobsupasy
+M=cor(Stabmobinfasy,Stabmobsupasy)
+library(corrplot)
+corrplot(M,method='ellipse')
+```
+
+```{r}
+data<-read_excel("Drive/RecapTM2S20202021.xlsx")
+head(data)
+data$Mobinfasy=factor(data$Mobinfasy,labels=c("0","1"))
+data$Mobsupasy=factor(data$Mobsupasy,labels=c("0","1"))
+data$Stabpelvasy=factor(data$Stabpelvasy,labels=c("0","1"))
+data$Mobinfasy=as.numeric(data$Mobinfasy)
+data$Mobsupasy=as.numeric(data$Mobsupasy)
+data$Stabpelvasy=as.numeric(data$Stabpelvasy)
+head(data)
+exos_asy=data[,c(7,11,16)]
+M=cor(exos_asy)
+corrplot(M,method='ellipse')
+```
+
+```{r}
+data<-read_excel("Drive/RecapTM2S20202021.xlsx")
+head(data)
+exos_asy=data[,c(4,5,6,8,9,10,12,14,15,17,18)]
+M<-cor(exos_asy)
+corrplot(M,method='ellipse')
+```
+
+```{r}
+data<-read_excel("Drive/TM2S_20212022.xlsx")
+head(data)
+exos_asy=data[,c(4,5,6,8,9,10,12,14,15,17,18)]
+M<-cor(exos_asy)
+M
+corrplot(M,method='circle')
+```
+Here, we can see the correlation between Mobinfdroite and Mobinfgauche. That is what we were expecting. We can also see that the categories are not really linked (or correlated). The different exercises are not repetitive and each one is playing a distincly important role. We find the same results as the year before. 
+
+Now, we are going to test if the exercises are linked between themselves. 
+
+```{r}
+#install.packages("readxl")
+library("readxl")
+data<-read_excel("Drive/TM2S_20212022.xlsx")
+head(data)
+new<-data.frame(data)
+```
+```{r}
+Mobinfdroite=data$Mobinfdroite
+Mobinfgauche=data$Mobinfgauche
+Mobinfbil=data$Mobinfbil
+
+Mobsupdroite=data$Mobsupdroite
+Mobsupgauche=data$Mobsupgauche
+Mobsupbil=data$Mobsupbil
+
+Stabpelvdroite=data$Stabpelvdroite
+Stabpelvgauche=data$Stabpelvgauche
+Stabscap=data$Stabscapulaire
+```
+
+```{r}
+#Indépendance entre catégories d'exercices : Mobinfdroite
+chisq.test(Mobinfdroite,Mobinfgauche)
+chisq.test(Mobinfdroite,Mobinfbil)
+chisq.test(Mobinfdroite,Mobsupdroite)
+chisq.test(Mobinfdroite,Mobsupgauche)
+chisq.test(Mobinfdroite,Mobsupbil)
+chisq.test(Mobinfdroite,Stabpelvdroite)
+chisq.test(Mobinfdroite,Stabpelvgauche)
+chisq.test(Mobinfdroite,Stabscap)
+```
+Mobinfdroite and Stabpelvdroite independent
+Mobinfdroite and Stabpelvgauche independent
+Mobinfdroite and Stabscap independent
+```{r}
+#Indépendance entre catégories d'exercices : Mobinfgauche
+chisq.test(Mobinfgauche,Mobinfbil)
+chisq.test(Mobinfgauche,Mobsupdroite)
+chisq.test(Mobinfgauche,Mobsupgauche)
+chisq.test(Mobinfgauche,Mobsupbil)
+chisq.test(Mobinfgauche,Stabpelvdroite)
+chisq.test(Mobinfgauche,Stabpelvgauche)
+chisq.test(Mobinfgauche,Stabscap)
+```
+Mobinfgauche and Mobsupdroite independent
+Mobinfgauche and Stabpelvdroite independent
+Mobinfgauche and Stabpelvgauche independent
+Mobinfgauche and Stabscap independent
+```{r}
+#Indépendance entre catégories d'exercices : Mobinfbil
+chisq.test(Mobinfbil,Mobsupdroite)
+chisq.test(Mobinfbil,Mobsupgauche)
+chisq.test(Mobinfbil,Mobsupbil)
+chisq.test(Mobinfbil,Stabpelvdroite)
+chisq.test(Mobinfbil,Stabpelvgauche)
+chisq.test(Mobinfbil,Stabscap)
+```
+Mobinfbil and Mobsupdroite independent
+Mobinfbil and Mobsupgauche independent
+Mobinfbil and Stabpelvdroite independent
+Mobinfbil and Stabpelvgauche independent
+Mobinfbil and Stabscap independent
+```{r}
+#Indépendance entre catégories d'exercices : Mobsupdroite
+chisq.test(Mobsupdroite,Mobsupgauche)
+chisq.test(Mobsupdroite,Mobsupbil)
+chisq.test(Mobsupdroite,Stabpelvdroite)
+chisq.test(Mobsupdroite,Stabpelvgauche)
+chisq.test(Mobsupdroite,Stabscap)
+```
+Mobsupdroite and Stabpelvdroite independent
+Mobsupdroite and Stabpelvgauche independent
+Mobsupdroite and Stabscap independent
+```{r}
+#Indépendance entre catégories d'exercices : Mobsupgauche
+chisq.test(Mobsupgauche,Mobsupbil)
+chisq.test(Mobsupgauche,Stabpelvdroite)
+chisq.test(Mobsupgauche,Stabpelvgauche)
+chisq.test(Mobsupgauche,Stabscap)
+```
+Mobsupgauche and Stabpelvdroite independent
+Mobsupgauche and Stabpelvgauche independent
+Mobsupgauche and Stabscap independent
+```{r}
+#Indépendance entre catégories d'exercices : Mobsupbil
+chisq.test(Mobsupbil,Stabpelvdroite)
+chisq.test(Mobsupbil,Stabpelvgauche)
+chisq.test(Mobsupbil,Stabscap)
+```
+Mobsupbil and Stabpelvdroite independent
+Mobsupbil and Stabpelvgauche independent
+Mobsupbil and Stabscap independent
+```{r}
+#Indépendance entre catégories d'exercices : Stabpelvdroite
+chisq.test(Stabpelvdroite,Stabpelvgauche)
+chisq.test(Stabpelvdroite,Stabscap)
+```
+
+```{r}
+#Indépendance entre catégories d'exercices : Stabpelvgauche
+chisq.test(Stabpelvgauche,Stabscap)
+
+#Indépendance entre catégories d'exercices : Stabscap -> fait avec tous les autres tests
+```
+
+
+
