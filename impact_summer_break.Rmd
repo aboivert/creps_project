@@ -1,0 +1,24 @@
+---
+title: "impact_summer_break"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("readxl")
+```
+
+```{r}
+data = read_excel("Post_et_pre_tests_2021.xlsx")
+summer_break = data$Arret
+difference_summer = data$Diff
+```
+
+```{r}
+cor(summer_break,difference_summer)
+test = lm(difference_summer ~ summer_break )
+summary(test)
+```
+```{r}
+chisq.test(summer_break,difference_summer)
+```

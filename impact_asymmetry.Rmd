@@ -1,0 +1,64 @@
+---
+title: "tries_laterality"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library("readxl")
+data = read_excel("tm2s_2021.xlsx")
+```
+
+```{r}
+data$LeftWound = ifelse(data$Cote == "G", 1, 0)
+data$RightWound = ifelse(data$Cote == "D", 1, 0)
+data$MobInfRightAss = ifelse(data$AsyMobInf == "1D" , 1, 0)
+data$MobInfLeftAss = ifelse(data$AsyMobInf == "1G" , 1, 0)
+data$MobSupRightAss = ifelse(data$AsyMobSup == "1D" | data$AsyMobSup == "2D", 1, 0)
+data$MobSupLeftAss = ifelse(data$AsyMobSup == "1G" | data$AsyMobSup == "2G", 1, 0)
+data$PelvRightAssSmall = ifelse(data$AsyPelv == "1D" , 1, 0)
+data$PelvLeftAssSmall = ifelse(data$AsyPelv == "1G", 1, 0)
+data$PelvRightAssStrong = ifelse( data$AsyPelv == "2D", 1, 0)
+data$PelvLeftAssStrong = ifelse( data$AsyPelv == "2G", 1, 0)
+```
+
+```{r}
+ok_don = (data[,c(27:36)])
+M = cor(ok_don, use = "complete.obs")
+library("corrplot")
+corrplot(M,method='ellipse')
+```
+```{r}
+test = lm(data$LeftWound ~ data$MobInfLeftAss + data$MobInfRightAss + data$MobSupLeftAss + data$MobSupRightAss + data$PelvLeftAssSmall + data$PelvRightAssSmall + data$PelvLeftAssStrong + data$PelvRightAssStrong)
+summary(test)
+chisq.test(data$RightWound, data$MobInfLeftAss)
+```
+
+```{r}
+test2 = lm(data$RightWound ~ data$MobInfLeftAss + data$MobInfRightAss + data$MobSupLeftAss + data$MobSupRightAss + data$PelvLeftAssSmall + data$PelvRightAssSmall + data$PelvLeftAssStrong + data$PelvRightAssStrong)
+summary(test2)
+```
+
+```{r}
+#Check if having an asymetry increases the risk of wounds
+data = read_excel("small_tm2s_2021.xlsx")
+data$AssyWhatever = ifelse(data$AsyMobInf == "1D" | data$AsyMobInf == "1G" | data$AsyMobSup == "1D" | data$AsyMobSup == "1G" | data$AsyPelv == "1D" | data$AsyPelv == "1G" | data$AsyPelv == "2D" | data$AsyPelv == "2G", 1, 0 )
+data$WoundWhaterver = ifelse(data$Nb_bless != 0, 1, 0)
+```
+
+```{r}
+cor(data$AssyWhatever, data$WoundWhaterver)
+chisq.test(data$AssyWhatever, data$WoundWhaterver)
+```
+```{r}
+cor(data$AssyWhatever, data$Nb_bless)
+
+```
+
+
+
+

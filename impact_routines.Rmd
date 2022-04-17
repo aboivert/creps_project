@@ -1,0 +1,30 @@
+---
+title: "impact_routines"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("readxl")
+```
+
+```{r}
+data = read_excel("BasketSansRoutinesPre_et_post_tests_20202021.xlsx")
+#Note : useless to put Routines as dummies !
+```
+
+```{r}
+#Datasets creation
+DiffMobInf = data$PostMobinf - data$PreMobinf
+DiffMobSup = data$PostMobsup- data$PreMobsup
+```
+
+```{r}
+cor(DiffMobInf, data$RoutineMobInf)
+chisq.test(DiffMobInf, data$RoutineMobInf)
+```
+```{r}
+cor(DiffMobSup, data$RoutineMobSup)
+chisq.test(DiffMobSup, data$RoutineMobSup)
+```
+
