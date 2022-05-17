@@ -19,32 +19,41 @@ new<-data.frame(data)
 ```
 
 ```{r fig.height=8, fig.width=8}
+library("wesanderson")
 SPORT=new$Sport
 
 SCORE_PRE=new$TotalPretest
 SCORE_POST=new$TotalPosttest
 
 par(mfrow=c(2,2))
-boxplot(SCORE_PRE, main="Scores des pré tests 2020",cex.main=0.8,xlab="")
-boxplot(SCORE_POST, main="Scores des post tests 2021",cex.main=0.8,xlab="")
+boxplot(SCORE_PRE, main="Scores of pre tests in 2020/2021",cex.main=0.8,xlab="",col=wes_palette(n=5, name="Royal2"))
+boxplot(SCORE_POST, main="Scores of post tests in 2020/2021",cex.main=0.8,xlab="",col=wes_palette(n=5, name="Royal2"))
 
-hist(SCORE_PRE, main="Histogramme des scores des pré tests 2020",cex.main=0.8,xlab="")
-hist(SCORE_POST, main="Histogramme des scores des post tests 2021",cex.main=0.8,xlab="")
+hist(SCORE_PRE, main="Scores of pre tests 2020/2021",cex.main=0.8,xlab="",col=wes_palette(n=5, name="Royal2"))
+hist(SCORE_POST, main="Scores of post tests 2020/2021",cex.main=0.8,xlab="",col=wes_palette(n=5, name="Royal2"))
 ```
-```{r fig.height=8, fig.width=8}
+```{r fig.height=9, fig.width=9}
 color=c("red","blue","green","orange","purple","brown","darkblue","yellow")
 DIFF=new$Diffprepost
+DIFFPOURC=new$Diffpourcent
 
 par(mfrow=c(2,1))
 
-plot(DIFF, type='p', col=color)
+plot(DIFFPOURC, type='p', col=color)
 abline(a=0, b=0, col="black")
 abline(a=5, b=0, col="black")
 
-boxplot(DIFF~SPORT)
+Diff_twenty=length(DIFFPOURC[DIFFPOURC>=0 & DIFFPOURC<=0.2]) ; Diff_twenty
+Diff_twenty_to_fifty=length(DIFFPOURC[DIFFPOURC>0.2 & DIFFPOURC<=0.5]) ; Diff_twenty_to_fifty
+Diff_underzero=length(DIFFPOURC[DIFFPOURC<0]) ; Diff_underzero
+Diff_overfifty=length(DIFFPOURC[DIFFPOURC>0.5]) ; Diff_overfifty
+
+
+boxplot(DIFFPOURC~SPORT)
+#chercher comment compter points entre deux droites
 
 ```
-
+Sur 124 athlètes, nous avons 100 athlètes (81%) qui ont un score égal pour les tests ou qui augmenté leur score jusqu'à 5 points ; nous avons 17 athlètes (14%) qui ont augmenté leur score de plus de 5 points ; nous avons 7 athlètes (5%) qui ont perdu un ou des points sur leur score. 
 ```{r fig.height=8, fig.width=8}
 SPORT=new$Sport
 par(mfrow=c(2,1))
@@ -52,7 +61,7 @@ boxplot(SCORE_PRE~SPORT, main="Pre test scores")
 boxplot(SCORE_POST~SPORT,main="Post test scores")
 ```
 
-```{r, warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(hrbrthemes)
 library(viridis)
@@ -88,7 +97,7 @@ new %>%
 
 
 Here, we are looking to the difference of the post tests of 2021 and the pre tests of 2021.
-We have a total of 42 athletes who have taken those 2 tests. 
+We have a total of 41 athletes who have taken those 2 tests. 
 
 ```{r}
 #install.packages("readxl")
@@ -103,11 +112,11 @@ NEW_SCORE_PRE=new2$TotalPretest
 NEW_SCORE_POST=new2$TotalPosttest
 
 par(mfrow=c(2,2))
-boxplot(NEW_SCORE_POST, main="Scores des post tests 2021",cex.main=0.8,xlab="")
-boxplot(NEW_SCORE_PRE, main="Scores des pré tests 2021",cex.main=0.8,xlab="")
+boxplot(NEW_SCORE_POST, main="Scores of post tests 2020/2021",cex.main=0.8,xlab="",col=wes_palette(n=5, name="Royal2"))
+boxplot(NEW_SCORE_PRE, main="Scores of pre tests 2021/2022",cex.main=0.8,xlab="",col=wes_palette(n=5, name="Royal2"))
 
-hist(NEW_SCORE_POST, main="Histogramme des scores des post tests 2021",cex.main=0.8,xlab="")
-hist(NEW_SCORE_PRE, main="Histogramme des scores des pré tests 2021",cex.main=0.8,xlab="")
+hist(NEW_SCORE_POST, main="Scores of post tests 2020/2021",cex.main=0.8,xlab="",col=wes_palette(n=5, name="Royal2"))
+hist(NEW_SCORE_PRE, main="Scores of pre tests 2021/2022",cex.main=0.8,xlab="",col=wes_palette(n=5, name="Royal2"))
 
 ```
 
@@ -115,15 +124,30 @@ hist(NEW_SCORE_PRE, main="Histogramme des scores des pré tests 2021",cex.main=0
 color=c("red","blue","green","orange","purple","brown","darkblue","yellow")
 NEW_DIFF=new2$Diff
 NEW_SPORT=new2$Sport
+NEW_DIFFPOURC=new2$Diff.en..
 
 par(mfrow=c(2,1))
 
-plot(NEW_DIFF, type='p', col=color)
+plot(NEW_DIFFPOURC, type='p', col=color)
 abline(a=0, b=0, col="black")
 abline(a=-5, b=0, col="black")
 
+Diff_twenty=length(NEW_DIFFPOURC[NEW_DIFFPOURC>=0 & NEW_DIFFPOURC<=0.2]) ; Diff_twenty
+Diff_twenty_to_fifty=length(NEW_DIFFPOURC[NEW_DIFFPOURC>0.2 & NEW_DIFFPOURC<=0.5]) ; Diff_twenty_to_fifty
+Diff_underzero=length(NEW_DIFFPOURC[NEW_DIFFPOURC<0]) ; Diff_underzero
+Diff_overfifty=length(NEW_DIFFPOURC[NEW_DIFFPOURC>0.5]) ; Diff_overfifty
+
+boxplot(NEW_DIFFPOURC~NEW_SPORT,xlab="", ylab="",main = "Evolution of score after the summer break per sport",col=wes_palette(n=5, name="Royal2"),names=c("RW","BS","BO","FB","S","SS","RU"))
+```
+Sur 41 athlètes, nous avons 20 athlètes (49%) qui ont un score égal pour les tests ou qui augmenté leur score jusqu'à 5 points ; nous avons 1 athlète (2%) qui ont augmenté leur score de plus de 5 points ; nous avons 20 athlètes (49%) qui ont perdu un ou des points sur leur score. 
+
+```{r fig.height=8, fig.width=8}
+par(mfrow=c(3,1))
+boxplot(NEW_SCORE_POST~NEW_SPORT,main="Post test scores")
+boxplot(NEW_SCORE_PRE~NEW_SPORT, main="Pre test scores")
 boxplot(NEW_DIFF~NEW_SPORT)
 ```
+
 
 ```{r}
 library(tidyverse)
