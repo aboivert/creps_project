@@ -1,0 +1,49 @@
+---
+title: "final_asymetry"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("readxl")
+library("ggplot2")
+```
+
+```{r}
+data = read_excel("small_tm2S_2021.xlsx")[c(3,4,32:37,40:44)]
+data = read_excel("tm2S_2021.xlsx")
+
+```
+
+```{r}
+# Test A
+Nb_BlessNonLat = data[,6] + data[,7]
+dataset_A = data[,c(3:8)]
+dataset_A[,"Nb_BlessNonLat"] = Nb_BlessNonLat
+AsymTM2S_D = dataset_A[dataset_A$AsymTM2S == "D", c(2,3,7)]
+AsymTM2S_G = dataset_A[dataset_A$AsymTM2S == "G", c(2,3,7)]
+AsymTM2S_N = dataset_A[dataset_A$AsymTM2S == 0, c(2,3,7)]
+```
+
+```{r}
+# Test B
+dataset_B = data[,c(2,3)]
+```
+
+```{r}
+# Test C
+dataset_C = data[,c(2:8)]
+```
+
+```{r}
+# Test D
+Nb_BlessNonLat = data[,6] + data[,7]
+dataset_D = data[,c(1,8)]
+dataset_D[,"Nb_BlessNonLat"] = Nb_BlessNonLat
+SportLat = dataset_D[dataset_D$Sport == "Basket"| dataset_D$Sport =="Bowling" |dataset_D$Sport =="Baseball"| dataset_D$Sport =="Rugby", c(2,3)]
+SportNonLat = dataset_D[dataset_D$Sport == "Aviron"| dataset_D$Sport =="Natation Synchro" |dataset_D$Sport =="Natation", c(2,3)]
+var.test(SportLat$Nb_BlessLat, SportNonLat$Nb_BlessLat)
+var.test(SportLat$Nb_BlessNonLat, SportNonLat$Nb_BlessNonLat)
+t.test(SportLat$Nb_BlessLat, SportNonLat$Nb_BlessLat, paired = FALSE, var.equal = TRUE, alternative = "greater")
+t.test(SportNonLat$Nb_BlessNonLat, SportLat$Nb_BlessNonLat, paired = FALSE, var.equal = TRUE, alternative = "greater")
+```

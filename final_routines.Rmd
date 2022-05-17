@@ -1,0 +1,117 @@
+---
+title: "final_routines"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("readxl")
+library("ggplot2")
+```
+
+```{r}
+data = read_excel("ParfaitRoutinesPre_et_post_tests_20202021.xlsx")
+```
+
+Pour vérifier la normalité, on affiche les Q-Q plot pour chaque variable.
+qqnorm(var);qqline(var, col = 2)
+
+```{r}
+#Datasets Mobilité
+RoutinesMob = data[data$RoutineMob!=0,c(19,20,29)]
+NoRoutinesMob = data[data$RoutineMob==0,c(19,20,29)]
+var.test(RoutinesMob$ScoreMobPre, RoutinesMob$ScoreMobPost)
+t.test(RoutinesMob$ScoreMobPost, RoutinesMob$ScoreMobPre, paired = TRUE, var.equal = TRUE, alternative = "greater")
+var.test(RoutinesMob$DiffMob, NoRoutinesMob$DiffMob)
+t.test(RoutinesMob$DiffMob, NoRoutinesMob$DiffMob, paired = FALSE, var.equal = TRUE, alternative = "greater")
+```
+
+```{r}
+#Datasets Stabilité
+RoutinesStab = data[data$RoutineStab!=0,c(21,22,30)]
+NoRoutinesStab = data[data$RoutineStab==0,c(21,22,30)]
+var.test(RoutinesStab$ScoreStabPre, RoutinesStab$ScoreStabPost)
+t.test(RoutinesStab$ScoreStabPost, RoutinesStab$ScoreStabPre, paired = TRUE, var.equal = TRUE, alternative = "greater")
+var.test(RoutinesStab$DiffStab, NoRoutinesStab$DiffStab)
+t.test(RoutinesStab$DiffStab, NoRoutinesStab$DiffStab, paired = FALSE, var.equal = FALSE, alternative = "greater")
+```
+
+```{r}
+#Datasets MI
+RoutinesMI = data[data$RoutineMI!=0,c(23,24,31)]
+NoRoutinesMI = data[data$RoutineMI==0,c(23,24,31)]
+qqnorm(RoutinesTR[,1])
+var.test(RoutinesMI$ScoreMIPre, RoutinesMI$ScoreMIPost)
+t.test(RoutinesMI$ScoreMIPost, RoutinesMI$ScoreMIPre, paired = TRUE, var.equal = TRUE, alternative = "greater")
+var.test(RoutinesMI$DiffMI, NoRoutinesMI$DiffMI)
+t.test(RoutinesMI$DiffMI, NoRoutinesMI$DiffMI, paired = FALSE, var.equal = TRUE, alternative = "greater")
+```
+
+```{r}
+#Datasets MS
+RoutinesMS = data[data$RoutineMS!=0,c(25,26,32)]
+NoRoutinesMS = data[data$RoutineMS==0,c(25,26,32)]
+var.test(RoutinesMS$ScoreMSPre, RoutinesMS$ScoreMSPost)
+t.test(RoutinesMob$ScoreMobPost, RoutinesMob$ScoreMobPre, paired = TRUE, var.equal = TRUE, alternative = "greater")
+var.test(RoutinesMob$DiffMob, NoRoutinesMob$DiffMob)
+t.test(RoutinesMob$DiffMob, NoRoutinesMob$DiffMob, paired = FALSE, var.equal = TRUE, alternative = "greater")
+```
+
+```{r}
+#Datasets TR
+RoutinesTR = data[data$RoutineTR!=0,c(27,28,33)]
+NoRoutinesTR = data[data$RoutineTR==0,c(27,28,33)]
+var.test(RoutinesTR$ScoreTRPre, RoutinesTR$ScoreTRPost)
+t.test(RoutinesTR$ScoreTRPost, RoutinesTR$ScoreTRPre, paired = TRUE, var.equal = TRUE, alternative = "greater")
+var.test(RoutinesTR$DiffTR, NoRoutinesTR$DiffTR)
+t.test(RoutinesTR$DiffTR, NoRoutinesTR$DiffTR, paired = FALSE, var.equal = TRUE, alternative = "greater")
+```
+
+Maintenant on va regarder si suivre une routine localisée permet de diminuer le
+nb moyen de blessures sur la zone.
+
+```{r}
+data = read_excel("BlessuresEtRoutinesPre_et_post_tests_20202021.xlsx")
+```
+
+```{r}
+#Datasets MI
+RoutinesMI = data[data$RoutineMI!=0,40]
+NoRoutinesMI = data[data$RoutineMI==0,40]
+var.test(RoutinesMI$MI, NoRoutinesMI$MI)
+t.test(RoutinesMI$MI, NoRoutinesMI$MI, paired = FALSE, var.equal = TRUE, alternative = "less")
+```
+
+```{r}
+#Datasets MS
+RoutinesMS = data[data$RoutineMS!=0,41]
+NoRoutinesMS = data[data$RoutineMS==0,41]
+var.test(RoutinesMS$MS, NoRoutinesMS$MS)
+t.test(RoutinesMS$MS, NoRoutinesMS$MS, paired = FALSE, var.equal = FALSE, alternative = "less")
+```
+
+```{r}
+#Datasets TR
+RoutinesTR = data[data$RoutineTR!=0,42]
+NoRoutinesTR = data[data$RoutineTR==0,42]
+var.test(RoutinesTR$TR, NoRoutinesTR$TR)
+t.test(RoutinesTR$TR, NoRoutinesTR$TR, paired = FALSE, var.equal = TRUE, alternative = "less")
+```
+```{r}
+# Downtime test
+data = read_excel("dowtime_test.xlsx")
+RoutinesMI = data[data$RoutineMI!=0,38]
+NoRoutinesMI = data[data$RoutineMI==0,38]
+RoutinesMS = data[data$RoutineMS!=0,39]
+NoRoutinesMS = data[data$RoutineMS==0,39]
+RoutinesTR = data[data$RoutineTR!=0,40]
+NoRoutinesTR = data[data$RoutineTR==0,40]
+var.test(RoutinesMI$IndispoMI, NoRoutinesMI$IndispoMI)
+t.test(RoutinesMI$IndispoMI, NoRoutinesMI$IndispoMI, paired = FALSE, var.equal = TRUE, alternative = "less")
+var.test(RoutinesMS$IndispoMS, NoRoutinesMS$IndispoMS)
+t.test(RoutinesMS$IndispoMS, NoRoutinesMS$IndispoMS, paired = FALSE, var.equal = FALSE, alternative = "less")
+var.test(RoutinesMS$IndispoMS, NoRoutinesMS$IndispoMS)
+t.test(RoutinesMS$IndispoMS, NoRoutinesMS$IndispoMS, paired = FALSE, var.equal = FALSE, alternative = "less")
+var.test(RoutinesTR$IndispoTR, NoRoutinesTR$IndispoTR)
+t.test(RoutinesTR$IndispoTR, NoRoutinesTR$IndispoTR, paired = FALSE, var.equal = TRUE, alternative = "less")
+```
