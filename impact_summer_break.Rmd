@@ -22,3 +22,6 @@ summary(test)
 ```{r}
 chisq.test(summer_break,difference_summer)
 ```
+```{r}
+plot(summer_break, difference_summer)
+```
